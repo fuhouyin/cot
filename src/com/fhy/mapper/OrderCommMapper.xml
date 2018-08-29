@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fhy.mapper.OrderCommMapper" >
+  <resultMap id="BaseResultMap" type="com.fhy.pojo.OrderComm" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="comm_id" property="commId" jdbcType="INTEGER" />
+    <result column="comm_num" property="commNum" jdbcType="VARCHAR" />
+    <result column="comm_price" property="commPrice" jdbcType="VARCHAR" />
+    <result column="oid" property="oid" jdbcType="INTEGER" />
+     <result column="comm_name" property="commName" jdbcType="VARCHAR" />
+    <result column="comm_img" property="commImg" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, comm_id, comm_num, comm_price, oid
+  </sql>
+  
+  <!-- 查询所有订单 -->
+  <select id="selectorderall" resultMap="BaseResultMap" parameterType="com.fhy.pojo.OrderComm">
+  	select c.comm_name,oc.comm_num,oc.comm_price,c.comm_img,too.otime,u.username,oc.oid,oc.comm_id 
+  	from comm as c,order_comm as oc,torder as too,user as u 
+  	where c.id = oc.comm_id and oc.oid = too.id and u.id = too.user_id 
+  </select>
+  
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="com.fhy.pojo.OrderComm">
+  	select c.comm_name,oc.comm_num,oc.comm_price,c.comm_img,too.otime,oc.oid,oc.comm_id
+  	from comm as c,order_comm as oc,torder as too 
+  	where c.id = oc.comm_id and oc.oid = too.id and oid in (select id from torder where user_id = #{user_id} and ostatus = 1)
+  </select>
+  
+  <!-- 添加订单详情 -->
+  <insert id="insertSelective" parameterType="com.fhy.pojo.OrderComm" >
+    insert into order_comm
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="commId != null" >
+        comm_id,
+      </if>
+      <if test="commNum != null" >
+        comm_num,
+      </if>
+      <if test="commPrice != null" >
+        comm_price,
+      </if>
+      <if test="oid != null" >
+        oid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="commId != null" >
+        #{commId,jdbcType=INTEGER},
+      </if>
+      <if test="commNum != null" >
+        #{commNum,jdbcType=VARCHAR},
+      </if>
+      <if test="commPrice != null" >
+        #{commPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="oid != null" >
+        #{oid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 删除 修改 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.fhy.pojo.OrderComm" >
+    update order_comm
+    <set >
+      <if test="commId != null" >
+        comm_id = #{commId,jdbcType=INTEGER},
+      </if>
+      <if test="commNum != null" >
+        comm_num = #{commNum,jdbcType=VARCHAR},
+      </if>
+      <if test="commPrice != null" >
+        comm_price = #{commPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="oid != null" >
+        oid = #{oid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

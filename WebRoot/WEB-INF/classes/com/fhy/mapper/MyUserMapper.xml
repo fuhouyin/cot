@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fhy.mapper.MyUserMapper" >
+  <resultMap id="BaseResultMap" type="com.fhy.pojo.MyUser" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="weixin" property="weixin" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="pca" property="pca" jdbcType="VARCHAR" />
+    <result column="province_id" property="provinceId" jdbcType="INTEGER" />
+    <result column="city_id" property="cityId" jdbcType="INTEGER" />
+    <result column="area_id" property="areaId" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, name, weixin, address, pca, province_id, city_id, area_id, phone, remark
+  </sql>
+  
+  <!-- 查询用户信息记录是否存在   如果不存在就执行adduserinfo -->
+  <select id="selectByuserid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from my_user
+    where user_id = #{user_id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 注册时，添加用户信息记录 -->
+  <insert id="adduserinfo" parameterType="com.fhy.pojo.MyUser">
+  	insert into my_user (user_id) values (#{userId,jdbcType=INTEGER})
+  </insert>
+  
+  <!-- 查询用户信息 -->
+  <select id="userinfo" resultMap="BaseResultMap" parameterType="com.fhy.pojo.MyUser">
+  	select u.username,m.id,m.user_id, m.name, m.weixin, m.address, m.pca,  m.phone 
+  	from my_user as m,user as u
+  	where user_id = #{user_id} and u.id = m.user_id
+  </select>
+  
+  <!-- 修改，删除 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.fhy.pojo.MyUser" >
+    update my_user
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="weixin != null" >
+        weixin = #{weixin,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="pca != null" >
+        pca = #{pca,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceId != null" >
+        province_id = #{provinceId,jdbcType=INTEGER},
+      </if>
+      <if test="cityId != null" >
+        city_id = #{cityId,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null" >
+        area_id = #{areaId,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fhy.mapper.TypeMapper" >
+  <resultMap id="BaseResultMap" type="com.fhy.pojo.Type" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="comm_type" property="commType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, comm_type
+  </sql>
+  
+  <!-- 查询 -->
+  <select id="typelist" resultMap="BaseResultMap" parameterType="com.fhy.pojo.Type">
+  	select * from type 
+  </select>
+  
+  <select id="typelist2" resultMap="BaseResultMap" parameterType="com.fhy.pojo.Type">
+  	select * from type 
+  </select>
+  
+</mapper>

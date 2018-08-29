@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fhy.mapper.TorderMapper" >
+  <resultMap id="BaseResultMap" type="com.fhy.pojo.Torder" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="otime" property="otime" jdbcType="VARCHAR" />
+    <result column="ostatus" property="ostatus" jdbcType="INTEGER" />
+    <result column="total" property="total" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, otime, ostatus, total
+  </sql>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from torder
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 添加订单记录 -->
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="com.fhy.pojo.Torder" >
+    insert into torder
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="otime != null" >
+        otime,
+      </if>
+      <if test="ostatus != null" >
+        ostatus,
+      </if>
+      <if test="total != null" >
+        total,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="otime != null" >
+        #{otime,jdbcType=VARCHAR},
+      </if>
+      <if test="ostatus != null" >
+        #{ostatus,jdbcType=INTEGER},
+      </if>
+      <if test="total != null" >
+        #{total,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 修改 删除订单记录 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.fhy.pojo.Torder" >
+    update torder
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="otime != null" >
+        otime = #{otime,jdbcType=VARCHAR},
+      </if>
+      <if test="ostatus != null" >
+        ostatus = #{ostatus,jdbcType=INTEGER},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

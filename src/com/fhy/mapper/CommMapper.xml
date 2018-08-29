@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fhy.mapper.CommMapper" >
+  <resultMap id="BaseResultMap" type="com.fhy.pojo.Comm" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="type_id" property="typeId" jdbcType="INTEGER" />
+    <result column="ztype_id" property="ztypeId" jdbcType="INTEGER" />
+    <result column="comm_name" property="commName" jdbcType="VARCHAR" />
+    <result column="comm_price" property="commPrice" jdbcType="VARCHAR" />
+    <result column="comm_img" property="commImg" jdbcType="VARCHAR" />
+    <result column="comm_status" property="commStatus" jdbcType="INTEGER" />
+    <result column="comm_remark" property="commRemark" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, type_id,ztype_id,comm_name, comm_price, comm_img, comm_status,comm_remark
+  </sql>
+  
+  <!-- 根据ID查询 -->
+  <select id="selectbyid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	select * from comm where id= #{id}
+  </select>
+  
+  <!-- 查询所有商品 -->
+  <select id="selectcommall" resultMap="BaseResultMap" parameterType="com.fhy.pojo.Comm">
+  	select * from comm
+  </select>
+  
+  <!-- 通过一级类别查询商品 -->
+  <select id="selectbytype" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	select * from comm where type_id = #{type_id} and comm_status = 1
+  </select>
+  
+  <!-- 通过二级类别查询商品 -->
+  <select id="selectbyztype" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  	select * from comm where ztype_id = #{ztype_id} and comm_status = 1
+  </select>
+  
+  <!-- 按条件查询商品 -->
+  <select id="selectKeyWord" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	SELECT * FROM comm WHERE comm_name like CONCAT('%',#{keyword},'%') and comm_status = 1
+  </select>
+  
+  <!-- 商品的详细信息 -->
+  <select id="comminfo" resultMap="BaseResultMap" parameterType="com.fhy.pojo.Comm">
+  	select comm.comm_name,comm.comm_price,comm.comm_img,comm.comm_remark,my_user.name,my_user.phone,my_user.weixin,type.comm_type,ztype.ztype_name 
+  	from comm,my_user,type,ztype 
+  	where comm.id = #{id} and my_user.user_id = comm.user_id and type.id = comm.type_id and ztype.id = comm.ztype_id
+  </select>
+  
+  <!-- 查询自己出售的商品 -->
+  <select id="my_comm" resultMap="BaseResultMap" parameterType="com.fhy.pojo.Comm">
+  	select * from comm where user_id = #{user_id}
+  </select>
+  
+  <!-- 录入商品信息 -->
+  <insert id="insertSelective" parameterType="com.fhy.pojo.Comm" >
+    insert into comm
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="ztypeId != null" >
+        ztype_id,
+      </if>
+      <if test="commName != null" >
+        comm_name,
+      </if>
+      <if test="commPrice != null" >
+        comm_price,
+      </if>
+      <if test="commImg != null" >
+        comm_img,
+      </if>
+      <if test="commStatus != null" >
+        comm_status,
+      </if>
+      <if test="commRemark != null" >
+        comm_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="ztypeId != null" >
+        #{ztypeId,jdbcType=INTEGER},
+      </if>
+      <if test="commName != null" >
+        #{commName,jdbcType=VARCHAR},
+      </if>
+      <if test="commPrice != null" >
+        #{commPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="commImg != null" >
+        #{commImg,jdbcType=VARCHAR},
+      </if>
+      <if test="commStatus != null" >
+        #{commStatus,jdbcType=INTEGER},
+      </if>
+      <if test="commRemark != null" >
+        #{commRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 修改商品信息 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.fhy.pojo.Comm" >
+    update comm
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=INTEGER},
+      </if>
+      <if test="ztypeId != null" >
+        ztype_id = #{ztypeId,jdbcType=INTEGER},
+      </if>
+      <if test="commName != null" >
+        comm_name = #{commName,jdbcType=VARCHAR},
+      </if>
+      <if test="commPrice != null" >
+        comm_price = #{commPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="commImg != null" >
+        comm_img = #{commImg,jdbcType=VARCHAR},
+      </if>
+      <if test="commStatus != null" >
+        comm_status = #{commStatus,jdbcType=INTEGER},
+      </if>
+      <if test="commRemark != null" >
+        comm_remark = #{commRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

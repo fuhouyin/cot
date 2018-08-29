@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fhy.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.fhy.pojo.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="auth" property="auth" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, username, password, status, auth, remark
+  </sql>
+  <!-- 查询用户信息all -->
+  <select id="selectall" resultMap="BaseResultMap"  parameterType="com.fhy.pojo.User">
+  	select * from user 
+  </select>
+  
+  <!-- 登陆查询 -->
+  <select id="login" resultMap="BaseResultMap"  parameterType="com.fhy.pojo.User">
+  	select * from user where username = #{username} and password=#{password}
+  </select>
+  
+  <!-- 用户是否存在查询 -->
+  <select id="selectByUsername" resultMap="BaseResultMap" parameterType="com.fhy.pojo.User">
+  	select * from user where username = #{username}
+  </select>
+  
+  <!-- 查询密码 -->
+  <select id="selectBypwd" resultMap="BaseResultMap" parameterType="com.fhy.pojo.User">
+  	select * from user where username = #{username}
+  </select>
+  
+  <!-- 用户注册 -->
+  <insert id="zhuce" useGeneratedKeys="true" keyProperty="id" parameterType="com.fhy.pojo.User" >
+  	insert into user (username,password) values (#{username,jdbcType=VARCHAR},#{password,jdbcType=VARCHAR})
+  </insert>
+ 
+  <!-- 密码、状态、身份的修改 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.fhy.pojo.User" >
+    update user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="auth != null" >
+        auth = #{auth,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+</mapper>
